@@ -1,6 +1,5 @@
 const path = require("path");
 const fs = require("fs").promises;
-// const { nanoid } = require("nanoid");
 
 const contactsPath = path.resolve("./db/contacts.json");
 
@@ -38,18 +37,17 @@ function removeContact(contactId) {
 }
 
 function addContact(name, email, phone) {
-  const contact = {
-    // id: nanoid(),
-    name,
-    email,
-    phone,
-  };
-
   fs.readFile(contactsPath, "utf8")
     .then((data) => {
-      const newArray = [contact, ...JSON.parse(data)];
-      console.table(newArray);
-      return fs.writeFile(contactsPath, JSON.stringify(newArray), "utf8");
+      const contacts = JSON.parse(data);
+      contacts.push({
+        id: (contacts.length + 1).toString(),
+        name,
+        email,
+        phone,
+      });
+      console.table(contacts);
+      return fs.writeFile(contactsPath, JSON.stringify(contacts), "utf8");
     })
     .catch((error) => console.log(error));
 }
